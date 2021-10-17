@@ -20,6 +20,6 @@ public class SinusoidalMovement : MonoBehaviour
     }
     
     void FixedUpdate(){
-        transform.position = _startPosition + (new Vector3(0.0f, distanceScale*Mathf.Sin((Time.time + timeOffset)*velScale), 0.0f));
+        transform.position = (new Vector3(transform.position.x, _startPosition.y + distanceScale*Mathf.Sin((Time.time + timeOffset)*velScale), transform.position.z));
     }
 }

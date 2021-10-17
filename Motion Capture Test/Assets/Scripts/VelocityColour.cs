@@ -6,7 +6,14 @@ public class VelocityColour : MonoBehaviour
 
     public VelocityTracker[] velTrackList;
 
+    [Range (0,1)]
+    public float lowEmission = 0;
+
     public Color lowColour = new Color(0,0,0,0);
+
+    [Range (0,1)]
+    public float highEmission = 0;
+
     public Color highColour = new Color(1,1,1,1);
 
     [Range (0,100)]
@@ -29,7 +36,7 @@ public class VelocityColour : MonoBehaviour
         ratio = 0f;
         prevRatio = 0f;
 
-        _renderer.material.SetColor("_Color", lowColour);
+        _renderer.material.SetColor("_BaseColor", lowColour);
     }
 
     void Update()
@@ -62,12 +69,16 @@ public class VelocityColour : MonoBehaviour
         float r = (lowColour.r + (highColour.r - lowColour.r)*ratio);
         float g = (lowColour.g + (highColour.g - lowColour.g)*ratio);
         float b = (lowColour.b + (highColour.b - lowColour.b)*ratio);
-        float intensity = (lowColour.a + (highColour.a - lowColour.a)*ratio);
+        float a = (lowColour.a + (highColour.a - lowColour.a)*ratio);
 
-        Color col = new Color(r,g,b,intensity);
+        Color col = new Color(r,g,b,a);
+
+        float emission = (ratio*(highEmission - lowEmission)) + lowEmission;
 
         //Call SetColor using the shader property name "_Color"
-        _renderer.material.SetColor("_Color",  col);
+        _renderer.material.SetColor("_BaseColor",  col);
+        Material mymat = GetComponent<Renderer>().material;
+        mymat.SetColor("_EmissionColor", col*emission);
 
         prevRatio = ratio;
 

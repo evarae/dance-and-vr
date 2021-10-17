@@ -8,9 +8,6 @@ public class VelocityScaler : MonoBehaviour
 
     public VelocityTracker[] velTrackList;
 
-    [Range(0.01f, 2f)]
-    public float _scaleVariable = 0.5f;
-
     [Range (0,100)]
     public float maxSpeed = 10f;
 
@@ -49,13 +46,8 @@ public class VelocityScaler : MonoBehaviour
 
         float speed = sum/(velTrackList.Length); //get average speed
 
-        if(speed < minSpeed){
-            ratio = 0;
-        } else if(speed > minSpeed + maxSpeed){
-            ratio = 1;
-        } else {
-            ratio = (speed/(minSpeed + maxSpeed));
-        }
+        ratio = Mathf.InverseLerp(minSpeed, maxSpeed, speed);
+        ratio = ratio*ratio;
 
         //Smooth out transitions using delta
         if(ratio > prevRatio){
@@ -66,7 +58,7 @@ public class VelocityScaler : MonoBehaviour
             ratio = Math.Max(minRatio, ratio);
         }
 
-        float scale = ((maxScale - minScale)*ratio + minScale);
+        float scale = ((maxScale - minScale)*(ratio*ratio) + minScale);
 
         //Update the scale of the transform
         gameObject.transform.localScale = new Vector3(_initScale.x, scale*_initScale.y, _initScale.z);
@@ -74,5 +66,47 @@ public class VelocityScaler : MonoBehaviour
         prevRatio = ratio;
 
     }
+
+        //     float sum = 0f;
+        // foreach (var velTrack in velTrackList)
+        // {
+        //     sum = sum + velTrack.getSpeed();
+        // }
+
+        // float speed = sum/(velTrackList.Length); //get average speed
+
+        // if(speed > prevSpeed){
+        //     float max = prevSpeed + delta*Time.deltaTime;
+        //     speed = Math.Min(max, speed);
+        // } else if (speed < prevSpeed){
+        //     float min = prevSpeed - delta*Time.deltaTime;
+        //     speed = Math.Max(min, speed);
+        // }
+
+        // if(speed < minSpeed){
+        //     ratio = 0;
+        // } else if(speed > minSpeed + maxSpeed){
+        //     ratio = 1;
+        // } else {
+        //     ratio = (speed/(minSpeed + maxSpeed));
+        // }
+
+        // // //Smooth out transitions using delta
+        // // if(ratio > prevRatio){
+        // //     float maxRatio = prevRatio + delta*Time.deltaTime;
+        // //     ratio = Math.Min(maxRatio, ratio);
+        // // } else if (ratio < prevRatio){
+        // //     float minRatio = prevRatio - delta*Time.deltaTime;
+        // //     ratio = Math.Max(minRatio, ratio);
+        // // }
+
+        // float scale = ((maxScale - minScale)*ratio + minScale);
+
+        // //Update the scale of the transform
+        // gameObject.transform.localScale = new Vector3(_initScale.x, scale*_initScale.y, _initScale.z);
+
+        // prevRatio = ratio;
+        // prevSpeed = speed;
+
     
 }

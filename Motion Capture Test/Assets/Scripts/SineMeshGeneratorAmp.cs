@@ -92,8 +92,6 @@ public class SineMeshGeneratorAmp : MonoBehaviour
             amplitude = Math.Max(min, amplitude);
         }
 
-        print("amplitude:" + amplitude);
-
         //Generate vertices
 
         for(int i = 0, z = 0; z <= zSize; z++){
